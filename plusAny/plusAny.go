@@ -1,4 +1,4 @@
-package mydemo
+package plusAny
 
 import (
 	"reflect"

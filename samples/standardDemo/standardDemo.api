@@ -1,0 +1,43 @@
+type (
+	SimpleMsg {
+		Message string `json:"msg,optional"`
+	}
+
+	StandardMsg {
+		Message          string `json:"msg,optional"`
+		EncryptedMessage string `json:"encryptedMsg,optional"`
+		DecryptedMessage string `json:"decryptedMsg,optional"`
+	}
+)
+
+//多套加解密策略共存示范：
+@server(
+	middleware: Multi1Request,Multi1Response
+)
+service standardDemo-api {
+	
+	@handler MultiDemo1
+	post /multiDemo1 (SimpleMsg) returns (SimpleMsg)
+}
+
+@server(
+	//自由组合，仅发送时加密
+	middleware: Multi2Request
+)
+service standardDemo-api {
+	
+	@handler MultiDemo2
+	post /multiDemo2 (SimpleMsg) returns (SimpleMsg)
+}
+
+@server(
+	//手动(选择部分字段)加密解密
+	middleware: Muti1Manual
+)
+service standardDemo-api {
+	
+	@handler ManualDemo
+	post /manualDemo (StandardMsg) returns (StandardMsg)
+}
+
+// goctl api go -api standardDemo.api -dir . -style=goZero

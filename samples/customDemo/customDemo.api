@@ -1,0 +1,16 @@
+type (
+	SimpleMsg {
+		Message string `json:"msg,optional"`
+	}
+)
+
+@server(
+	middleware: CryptomRequest,CryptomResponse
+)
+service customDemo-api {
+	
+	@handler CustomDemo
+	post /customDemo (SimpleMsg) returns (SimpleMsg)
+}
+
+// goctl api go -api customDemo.api -dir . -style=goZero
