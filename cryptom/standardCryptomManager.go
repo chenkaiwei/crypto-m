@@ -11,13 +11,13 @@ import (
 	"net/http"
 )
 
-type StandardCryptomManager struct {
+type standardCryptomManager struct {
 	cekAlgo     algom.CekAlgo
 	contentAlgo algom.ContentAlgo
 }
 
 //保证在多handle叠加使用时也仅初始化一次：若已经解密过，从context中获取；若未解密过，从header中取出cryption并解密，并将结果（内容密钥）存入context。
-func (m *StandardCryptomManager) getCekFromCtxOrHeader(r *http.Request) (cek []byte, reqWithCek *http.Request, err error) {
+func (m *standardCryptomManager) getCekFromCtxOrHeader(r *http.Request) (cek []byte, reqWithCek *http.Request, err error) {
 	// 更精益求精的改造还可以考虑这个方法仅用于首次解密cek时存入context，handler中后续的解密改成调用ContentDecrypt
 	cek, err = getCekFromContext(r.Context())
 
@@ -52,7 +52,7 @@ func (m *StandardCryptomManager) getCekFromCtxOrHeader(r *http.Request) (cek []b
 
 /*custom util*/
 //内容解密，手动使用
-func (m *StandardCryptomManager) ContentDecrypt(ctx context.Context, encryptedMsg string) (res string, err error) {
+func (m *standardCryptomManager) ContentDecrypt(ctx context.Context, encryptedMsg string) (res string, err error) {
 
 	cek, err := getCekFromContext(ctx)
 	if err != nil {
@@ -70,7 +70,7 @@ func (m *StandardCryptomManager) ContentDecrypt(ctx context.Context, encryptedMs
 }
 
 //内容加密
-func (m *StandardCryptomManager) ContentEncrypt(ctx context.Context, msg string) (res string, err error) {
+func (m *standardCryptomManager) ContentEncrypt(ctx context.Context, msg string) (res string, err error) {
 
 	cek, err := getCekFromContext(ctx)
 	if err != nil {
@@ -85,7 +85,7 @@ func (m *StandardCryptomManager) ContentEncrypt(ctx context.Context, msg string)
 	return
 }
 
-func (m *StandardCryptomManager) RequestHandle(next http.HandlerFunc) http.HandlerFunc {
+func (m *standardCryptomManager) RequestHandle(next http.HandlerFunc) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -120,7 +120,7 @@ func (m *StandardCryptomManager) RequestHandle(next http.HandlerFunc) http.Handl
 }
 
 //仅将Cek解密后存入context，在logic中通过manager手动解密加密
-func (m *StandardCryptomManager) ManualHandle(next http.HandlerFunc) http.HandlerFunc {
+func (m *standardCryptomManager) ManualHandle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		_, newReq, err := m.getCekFromCtxOrHeader(r)
@@ -134,7 +134,7 @@ func (m *StandardCryptomManager) ManualHandle(next http.HandlerFunc) http.Handle
 }
 
 //对整个返回的响应body进行加密
-func (m *StandardCryptomManager) ResponseHandle(next http.HandlerFunc) http.HandlerFunc {
+func (m *standardCryptomManager) ResponseHandle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cek, reqWithCek, err := m.getCekFromCtxOrHeader(r)
 		if err != nil {

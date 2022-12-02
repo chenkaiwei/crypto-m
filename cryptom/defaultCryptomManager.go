@@ -1,6 +1,6 @@
 package cryptom
 
-// 本文件已被standardCryptomManager取代，源码缓缓再删
+// 本文件已被standardCryptomManager取代，源码缓删
 //
 //type DefaultCryptionManager struct {
 //	rsaPrivateKey string

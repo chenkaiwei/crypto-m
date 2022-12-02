@@ -3,7 +3,7 @@ package algom
 import "github.com/wumansgy/goEncrypt/rsa"
 
 type CekAlgo interface {
-	cekAlgoPrivate() //防止contentAlgo串味到这边来
+	cekAlgoPrivate() //防止被其他接口无意实现
 	//cek只需要解密，加密是客户端的事
 	Decrypt(s string) ([]byte, error)
 }

@@ -20,7 +20,7 @@ func TestCustomDemo(t *testing.T) {
 	//组装消息体
 	s := "{\"msg\":\"来自TestCustomDemo的测试消息\"}"
 
-	//加密
+	//加密，自定义的凯撒加密法
 	offset := cek
 	data := []byte(s)
 	for i, datum := range data {
