@@ -20,7 +20,7 @@ func TestSimpleDemo(t *testing.T) {
 
 	//==请求服务器阶段：
 	client := &http.Client{}
-	url := "http://localhost:11111/auth/cryptionTest"
+	url := "http://localhost:11111/cryptionTest"
 
 	//组装消息体
 	s := "{\"msg\":\"来自TestSimpleDemo的加密测试数据\"}"
