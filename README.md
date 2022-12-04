@@ -323,4 +323,5 @@ func TestSimpleDemo(t *testing.T) {
    由于不对称加密的技术过于高端我实在手搓不能，就依然沿用一家独大的Rsa策略了，然后原本用作密钥的cek就由凯撒加密法的偏移量代替，反正从功能上看也算最古早的一种密钥了，二者结合依然是个符合标准的混合加密策略。
    > *对应客户端示例 samples/client_demo/custom_demo_test.go
 
-
+# 交流建议
+CSDN的介绍贴和github的issue我当然也会回复，最即时的还是扣扣群：七842一9974
