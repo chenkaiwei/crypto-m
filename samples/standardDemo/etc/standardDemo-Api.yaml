@@ -1,0 +1,6 @@
+Name: standardDemo-api
+Host: 0.0.0.0
+Port: 11112
+
+Log:
+  Encoding: plain

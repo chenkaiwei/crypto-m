@@ -1,0 +1,6 @@
+Name: simpleDemo-api
+Host: 0.0.0.0
+Port: 11111
+
+Log:
+  Encoding: plain

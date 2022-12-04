@@ -1,0 +1,17 @@
+type (
+	SimpleMsg {
+		Message string `json:"msg,optional"`
+	}
+)
+
+//⬇️加解密都要
+@server(
+	middleware: CryptionRequest,CryptionResponse
+)
+service simpleDemo-api {
+	
+	@handler CryptionTest
+	post /cryptionTest (SimpleMsg) returns (SimpleMsg)
+}
+
+// goctl api go -api simpleDemo.api -dir . -style=goZero
