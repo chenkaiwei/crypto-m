@@ -1,8 +1,11 @@
 # 产品简介
-An easy-used hybrid-encryption middleware manager which used for go-zero framework。
-![crypto-m.png](assets/crypto-m.png#pic_left=10x)
+<p align="center">
+<img align="center" width="150px" src="https://raw.githubusercontent.com/chenkaiwei/crypto-m/main/assets/crypto-m.png">
+</p>
 
-本包是一个基于go-zero框架的通信加、解密中间件的管理工具，使用不对称加密和对称加密的混合加密策略。
+Crypto-m is an easy-used hybrid-encryption middleware manager which used for go-zero framework。
+
+Crypto-m是一个基于go-zero框架的通信加、解密中间件的管理工具，使用不对称加密和对称加密的混合加密策略。
 
 本包接口定义清晰简洁，使用方便，欢迎广大新老同行选用。
 
