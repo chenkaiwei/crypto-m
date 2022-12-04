@@ -11,6 +11,9 @@ Crypto-m是一个基于go-zero框架的通信加、解密中间件的管理工�
 
 >(名称中的后缀-m，既代表中间件middleware，也代表manager，还代表可手动manual。
 
+# 源码地址
+Github：https://github.com/chenkaiwei/crypto-m
+
 # quick start
 ###服务端：
 1. 在api文件中按go-zero的规则加入中间件的定义
@@ -32,7 +35,7 @@ Crypto-m是一个基于go-zero框架的通信加、解密中间件的管理工�
     }
    ```
 2. 删除自动生成的空白中间件
-   ![img.png](assets/img.png)
+   ![img.png](https://raw.githubusercontent.com/chenkaiwei/crypto-m/main/assets/img.png)
 3. 关键步骤：在serviceContext.go文件中配置cryptom.cryptomManager
 
    ```go
