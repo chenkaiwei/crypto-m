@@ -1,6 +1,6 @@
 # 产品简介
 An easy-used hybrid-encryption middleware manager which used for go-zero framework。
-![crypto-m.png](assets/crypto-m.png)
+![crypto-m.png](assets/crypto-m.png#pic_left=10x)
 
 本包是一个基于go-zero框架的通信加、解密中间件的管理工具，使用不对称加密和对称加密的混合加密策略。
 
