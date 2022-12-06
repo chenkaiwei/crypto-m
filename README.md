@@ -9,7 +9,7 @@ Crypto-m是一个基于go-zero框架的通信加、解密中间件管理工具�
 （名称中的后缀-m，既代表中间件middleware，也代表manager，还代表可手动manual。）
 
 # 源码地址
-Github：https://github.com/chenkaiwei/crypto-m
+Github：[https://github.com/chenkaiwei/crypto-m](https://github.com/chenkaiwei/crypto-m)
 
 # quick start
 ### 服务端：
@@ -84,7 +84,7 @@ Github：https://github.com/chenkaiwei/crypto-m
     return
    }
    ```
-> ⬆️由于中间件的配置，在logic代码中即为解密后、加密前的内容，可直接按明文使用
+> ⬆️由于中间件的配置，在logic代码中的req、resp即为请求解密后、响应加密前的内容，直接按明文使用即可。
 
 至此服务端的配置就已全部完成，以下是对客户端的开发要求
 ### 客户端：
@@ -329,4 +329,4 @@ e.g.(svc/serviceContext.go)
 
 # 交流建议
 CSDN的介绍贴的评论、私信，或者github的issue都可以。
-扣群784219974
+QQ群：784219974
