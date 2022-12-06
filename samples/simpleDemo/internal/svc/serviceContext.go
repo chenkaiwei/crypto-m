@@ -2,6 +2,7 @@ package svc
 
 import (
 	"github.com/chenkaiwei/crypto-m/cryptom"
+	"github.com/chenkaiwei/crypto-m/cryptom/algom"
 	"github.com/chenkaiwei/crypto-m/samples/simpleDemo/internal/config"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -16,10 +17,12 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	//入门级manager,加密策略不可选，固定为的rsa+aes(cbc)
-	cryptomManager := cryptom.NewDefaultCryptomManager(
-		PRIVATE_KEY,
-		[]byte("1111222233334444"))
+	//针对cek的不对称加密策略
+	cekAlgo := algom.NewCekAlgoRsaBase64(PRIVATE_KEY)
+	//针对消息内容的对称加密策略
+	contentAlgo := algom.NewContentAlgoAesCbcHex([]byte("1111222233334444"))
+	//组装成manager
+	cryptomManager := cryptom.NewStandardCryptomManager(cekAlgo, contentAlgo)
 
 	return &ServiceContext{
 		Config:           c,

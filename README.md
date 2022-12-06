@@ -1,21 +1,18 @@
 # 产品简介
 <p align="center">
-<img align="center" width="150px" src="https://raw.githubusercontent.com/chenkaiwei/crypto-m/main/assets/crypto-m.png">
+<img align="center" width="150px" src="https://img-blog.csdnimg.cn/img_convert/6e6a82f5804d5c06542c925ee99c1d78.png#pic_center">
 </p>
 
 Crypto-m is an easy-used hybrid-encryption middleware manager which used for go-zero framework。
 
-Crypto-m是一个基于go-zero框架的通信加、解密中间件的管理工具，使用不对称加密和对称加密的混合加密策略。
-
-本包接口定义清晰简洁，使用方便，欢迎广大新老同行选用。
-
->(名称中的后缀-m，既代表中间件middleware，也代表manager，还代表可手动manual。
+Crypto-m是一个基于go-zero框架的通信加、解密中间件管理工具，使用不对称加密和对称加密的混合加密策略（hybrid-encryption）。本包设计清晰简洁，使用方便，欢迎广大新老同行选用。
+（名称中的后缀-m，既代表中间件middleware，也代表manager，还代表可手动manual。）
 
 # 源码地址
 Github：https://github.com/chenkaiwei/crypto-m
 
 # quick start
-###服务端：
+### 服务端：
 1. 在api文件中按go-zero的规则加入中间件的定义
    ```api
    type (
@@ -24,7 +21,7 @@ Github：https://github.com/chenkaiwei/crypto-m
     }
     )
     
-    //⬇️中间件名称可自行定义，但初上手建议和我保持一致
+    //⬇️中间件名称可自行定义，初次使用建议和demo保持一致
     @server(
     middleware: CryptionRequest,CryptionResponse
     )
@@ -35,7 +32,7 @@ Github：https://github.com/chenkaiwei/crypto-m
     }
    ```
 2. 删除自动生成的空白中间件
-   ![img.png](https://raw.githubusercontent.com/chenkaiwei/crypto-m/main/assets/img.png)
+   ![img.png](https://img-blog.csdnimg.cn/img_convert/2c79375a4432e10e196e81c3e9d1a8e6.png)
 3. 关键步骤：在serviceContext.go文件中配置cryptom.cryptomManager
 
    ```go
@@ -57,10 +54,13 @@ Github：https://github.com/chenkaiwei/crypto-m
    
    func NewServiceContext(c config.Config) *ServiceContext {
    
-       //默认的manager,加密策略不可选，固定为的rsa+aes(cbc)
-       cryptomManager := cryptom.NewDefaultCryptomManager(
-           PRIVATE_KEY,
-           []byte("1111222233334444"))
+
+		//针对cek的不对称加密策略
+		cekAlgo := algom.NewCekAlgoRsaBase64(PRIVATE_KEY)
+		//针对消息内容的对称加密策略
+		contentAlgo := algom.NewContentAlgoAesCbcHex([]byte("1111222233334444"))
+		//组装成manager
+		cryptomManager := cryptom.NewStandardCryptomManager(cekAlgo, contentAlgo)
    
        return &ServiceContext{
            Config:           c,
@@ -71,11 +71,11 @@ Github：https://github.com/chenkaiwei/crypto-m
 
    ```
    其中cryptomManager.RequestHandle功能为对所有应用该中间件的接口的请求消息体进行解密；cryptomManager.ResponseHandle的功能为对所有应用该中间件的接口的响应消息体进行加密。
-   
+
    至此crypto-m的配置和使用已经完成
 
 4. 按照业务需要正常完成逻辑代码功能等
-   (⬇️simpleDemo/internal/logic/cryptionTestLogic.go)
+> (e.g.⬇️simpleDemo/internal/logic/cryptionTestLogic.go)
    ```go
    func (l *CryptionTestLogic) CryptionTest(req *types.SimpleMsg) (resp *types.SimpleMsg, err error) {
     resp = &types.SimpleMsg{
@@ -84,8 +84,10 @@ Github：https://github.com/chenkaiwei/crypto-m
     return
    }
    ```
-   至此服务端的配置就已全部完成，以下是对客户端的开发要求
-###客户端：
+> ⬆️由于中间件的配置，在logic代码中即为解密后、加密前的内容，可直接按明文使用
+
+至此服务端的配置就已全部完成，以下是对客户端的开发要求
+### 客户端：
 客户端的示例代码详见samples/client_demo/simple_demo_test.go
 这里用go程序作为演示
 ```go
@@ -164,17 +166,16 @@ func TestSimpleDemo(t *testing.T) {
 7. 获得响应后同样按照内容对称加密的策略、先前生成的cek，解密所返回的响应消息体。至此加解密通信环节完成。
 8. 对解密后的消息体进行正常的业务逻辑处理。
 
-#进阶用法
+# 进阶用法
 在 samples/standardDemo项目中你可以找到本工具的几项进阶用法。具体方向包括：
-1. 自选加密策略
-
-   e.g.(svc/serviceContext.go)
+### 1. 自选其他加密策略
+e.g.(svc/serviceContext.go)
    ```go
    cryptom.NewStandardCryptomManager(algom.NewCekAlgoRsaBase64(PRIVATE_KEY), algom.NewContentAlgoTripleDesBase64(nil))
    ```
-   其中NewContentAlgoTripleDesBase64即以三次des的加解密策略来处理正文（content）数据。
-2. 多套加解密策略共用
-   e.g.(svc/serviceContext.go)
+其中NewContentAlgoTripleDesBase64即以三次des的加解密策略来处理正文（content）数据。
+### 2. 多套加解密策略共用
+e.g.(svc/serviceContext.go)
    ```go
    func NewServiceContext(c config.Config) *ServiceContext {
 
@@ -191,8 +192,8 @@ func TestSimpleDemo(t *testing.T) {
    }
    }
    ```
-   示例中配置了multi1和multi2两套加解密策略，而其各自对应的接口分配则依然在api中设置
-   (samples/standardDemo/standardDemo.api)
+示例中配置了multi1和multi2两套加解密策略，而其各自对应的接口分配则依然在api中设置
+(samples/standardDemo/standardDemo.api)
    ```api
    @server(
    middleware: Multi1Request,Multi1Response
@@ -213,9 +214,9 @@ func TestSimpleDemo(t *testing.T) {
        post /multiDemo2 (SimpleMsg) returns (SimpleMsg)
    }  
    ```
-   以上MultiDemo2的中间件配置同时也是令中间件仅对请求加密/仅对响应解密的配置演示
-   > *对应客户端示例见samples/client_demo/standard_demo_test.go，没啥特别的故此不加赘述。
-3. 手动选择部分字段或内容加解密
+以上MultiDemo2的中间件配置同时也是令中间件仅对请求加密/仅对响应解密的配置演示
+> *对应客户端示例见samples/client_demo/standard_demo_test.go，和simple差别不大故此不加赘述。
+### 3. 手动选择部分字段或内容加解密
    ```go
    func NewServiceContext(c config.Config) *ServiceContext {
 
@@ -232,8 +233,8 @@ func TestSimpleDemo(t *testing.T) {
    }
    }
    ```
-   手动加密时，须将对应cryptomManager对象也添加进ServiceContext（即上述代码中的Multi1CryptomManager），供logic部分手动加解密使用。手动加解密部分的示例如下
-   (samples/standardDemo/internal/logic/manualDemoLogic.go)：
+手动加密时，须将对应cryptomManager对象也添加进ServiceContext（即上述代码中的Multi1CryptomManager），供logic部分手动加解密使用。示例如下
+(samples/standardDemo/internal/logic/manualDemoLogic.go)：
    ```go
    func (l *ManualDemoLogic) ManualDemo(req *types.StandardMsg) (resp *types.StandardMsg, err error) {
    
@@ -266,11 +267,11 @@ func TestSimpleDemo(t *testing.T) {
        return
    }
    ```
-   > *对应客户端演示代码亦见samples/client_demo/standard_demo_test.go
+> *对应客户端演示代码亦见samples/client_demo/standard_demo_test.go
 
-4. 自定义加解密策略
+### 4. 自定义加解密策略
 
-   这个用法的示例写在 samples/customDemo 里，核心代码参考samples/customDemo/internal/cryptomx/myContentAlgo.go，也即自己实现一个ContentAlgo接口。
+这个用法的示例写在 samples/customDemo 里，核心代码参考samples/customDemo/internal/cryptomx/myContentAlgo.go，也即自己实现一个ContentAlgo接口。
    ```go
    package cryptomx
    
@@ -322,9 +323,10 @@ func TestSimpleDemo(t *testing.T) {
    }
 
    ```
-   这里我手搓了一套凯撒加密法（的赛博变体）作为演示，具体做法为将每一个字节作为数字进行一定量的偏移（原版是在26个字母范围内偏移）。
-   由于不对称加密的技术过于高端我实在手搓不能，就依然沿用一家独大的Rsa策略了，然后原本用作密钥的cek就由凯撒加密法的偏移量代替，反正从功能上看也算最古早的一种密钥了，二者结合依然是个符合标准的混合加密策略。
-   > *对应客户端示例 samples/client_demo/custom_demo_test.go
+这里我手搓了一套凯撒加密法（的变体）作为演示，具体做法为将每一个字节作为数字进行一定量的偏移（原版是26个字母按照次序偏移）。
+由于不对称加密过于高端我辈手搓不能，就依然沿用一家独大的Rsa策略了，然后原本用作密钥的cek就由凯撒加密法的偏移量代替，反正从功能上看也算是一种密钥了，二者结合依然是个足够凑合的混合加密策略。
+> *对应客户端示例 samples/client_demo/custom_demo_test.go
 
 # 交流建议
-CSDN的介绍贴和github的issue我当然也会回复，最即时的还是扣扣群：七842一9974
+CSDN的介绍贴的评论、私信，或者github的issue都可以。
+扣群784219974
