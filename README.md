@@ -8,8 +8,11 @@ Crypto-m is an easy-used hybrid-encryption middleware manager which used for go-
 Crypto-m是一个基于go-zero框架的通信加、解密中间件管理工具，使用不对称加密和对称加密的混合加密策略（hybrid-encryption）。本包设计清晰简洁，使用方便，欢迎广大新老同行选用。
 （名称中的后缀-m，既代表中间件middleware，也代表manager，还代表可手动manual。）
 
-# 源码地址
-Github：[https://github.com/chenkaiwei/crypto-m](https://github.com/chenkaiwei/crypto-m)
+# 相关链接
+源码地址：[https://github.com/chenkaiwei/crypto-m](https://github.com/chenkaiwei/crypto-m)
+
+教程示例：
+[https://github.com/chenkaiwei/crypto-m-samples](https://github.com/chenkaiwei/crypto-m-samples)
 
 # quick start
 ### 服务端：
@@ -36,13 +39,7 @@ Github：[https://github.com/chenkaiwei/crypto-m](https://github.com/chenkaiwei/
 3. 关键步骤：在serviceContext.go文件中配置cryptom.cryptomManager
 
    ```go
-   package svc
-   
-   import (
-   "github.com/chenkaiwei/crypto-m/cryptom"
-   "github.com/chenkaiwei/crypto-m/samples/simpleDemo/internal/config"
-   "github.com/zeromicro/go-zero/rest"
-   )
+
    
    const PRIVATE_KEY = "MIICWwIBAAKBgQC9G7U67pfDHfAfUvMkZ2uBPyEbvqYrlr5xEr2zvcoKxXfdfh4+n//ycD2wTE4EkwwAJiVAqaT3s1KilhkMf4RnB5sE1Fj0Aq7n+8tYsmTdK95BIEeSGuO2qZIni5S7EaAZVSQiv8HGbedlteAv2Ja1XRZsnIoe0E9qQBOCAhpB6QIDAQABAoGAV/Kd62VxISY4OWkreP+8CKTicfPNdjIqKY4suX4Hi9DgeRshV8CzmP3IQsiJ9CirCRq0cokzFpvIT6L8zUo0uaRJdaA7cpo2iJLUtoOHc6zdUHdBHBaVEa9ymjEqx2wrIw5kkcy4SBe472DWJDtphgig9S3THww9k4jzn0L6DL0CQQDxsfPRm3nwOj8qaVHBJCYcJ0+rdXL9a7UIYomUBEF6Z+DRlG6iYI5ZXSJZ+Sxhp20QawVk47JlMOGGRM7o2ApbAkEAyEz7/5kkp6IZ3lC4yRrTD86eKjJ9yzSXiOBQiVmW54lluxvK6o4sXP/+hVb9zqiD5AYOwjFbLiCTtSLZgv5wCwJAZSuxPPdQ5p7rG+y0HR3tmfFWpxXlyXDRea4NmtjhM8TR1cjFOtEiJQQYQgNMcaAsxieWPXIWlccNUC/zUIJGawJAKpudu3hjQLmN0SnQtQ7cuO8V3BoTgkd0uKwm1aDWJfinSE8YMh7+NuZJySmBIhXcwIO9XffL0pshcJWyOVhQkwJANTQejTHOgu7bPkGe5Zg+HfHQGMrimffbWckXMTDQpA1y5l5fq7+B7cauSYoNcQZ41Bp38USCzsxkwTn5659iFA=="
    
