@@ -17,9 +17,8 @@ Crypto-m是一个基于go-zero框架的通信加、解密中间件管理工具�
 # quick start
 >以下示例的完整代码均在 [crypto-m-samples](https://github.com/chenkaiwei/crypto-m-samples) 库中
 ### 服务端：
-1. 项目目录下命令行输入
-   >go get github.com/chenkaiwei/crypto-m
-3. 在api文件中按go-zero的规则加入中间件的定义
+1. >go get github.com/chenkaiwei/crypto-m
+2. 在api文件中按go-zero的规则加入中间件的定义
    ```api
    type (
     SimpleMsg {
@@ -37,9 +36,9 @@ Crypto-m是一个基于go-zero框架的通信加、解密中间件管理工具�
         post /cryptionTest (SimpleMsg) returns (SimpleMsg)
     }
    ```
-4. 删除自动生成的空白中间件
+3. 删除自动生成的空白中间件
    ![img.png](https://img-blog.csdnimg.cn/img_convert/2c79375a4432e10e196e81c3e9d1a8e6.png)
-5. 关键步骤：在serviceContext.go文件中配置cryptom.cryptomManager
+4. 关键步骤：在serviceContext.go文件中配置cryptom.cryptomManager
 
    ```go
 
@@ -74,7 +73,7 @@ Crypto-m是一个基于go-zero框架的通信加、解密中间件管理工具�
 
    至此crypto-m的配置和使用已经完成
 
-6. 按照业务需要正常完成逻辑代码功能等
+5. 按照业务需要正常完成逻辑代码功能等
 > (e.g.⬇️simpleDemo/internal/logic/cryptionTestLogic.go)
    ```go
    func (l *CryptionTestLogic) CryptionTest(req *types.SimpleMsg) (resp *types.SimpleMsg, err error) {
