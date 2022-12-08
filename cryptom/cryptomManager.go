@@ -2,7 +2,7 @@ package cryptom
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
+	//"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 )
 
@@ -25,6 +25,5 @@ func getCekFromContext(ctx context.Context) (cek []byte, err error) {
 		return
 	}
 	cek = value.([]byte)
-	logx.Info("成功获取已经解密的内容密钥--", cek)
 	return
 }

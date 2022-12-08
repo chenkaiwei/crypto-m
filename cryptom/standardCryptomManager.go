@@ -5,7 +5,6 @@ import (
 	"context"
 	"github.com/chenkaiwei/crypto-m/cryptom/algom"
 	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"io/ioutil"
 	"net/http"
@@ -18,14 +17,14 @@ type standardCryptomManager struct {
 
 //保证在多handle叠加使用时也仅初始化一次：若已经解密过，从context中获取；若未解密过，从header中取出cryption并解密，并将结果（内容密钥）存入context。
 func (m *standardCryptomManager) getCekFromCtxOrHeader(r *http.Request) (cek []byte, reqWithCek *http.Request, err error) {
-	// 更精益求精的改造还可以考虑这个方法仅用于首次解密cek时存入context，handler中后续的解密改成调用ContentDecrypt
+	// TODO 更精益求精的改造还可以考虑这个方法仅用于首次解密cek时存入context，handler中后续的解密改成调用ContentDecrypt
 	cek, err = getCekFromContext(r.Context())
 
 	//⬇️CEK不存在时，从header中取出cryption并解密一遍，再存入context
 	if err != nil && errors.Is(err, ErrCEKNotFoundInContext) {
 
 		ecek := r.Header.Get("ECEK")
-		logx.Info("解密内容密钥(ecek)--", ecek)
+		//logx.Info("解密内容密钥(ecek)--", ecek)
 		if len(ecek) == 0 {
 			err = ErrECEKNotFoundInHeader
 			return
@@ -39,7 +38,7 @@ func (m *standardCryptomManager) getCekFromCtxOrHeader(r *http.Request) (cek []b
 
 		err = nil //清空err，否则会被return带出去
 
-		logx.Info("内容密钥(cek)解密成功--", string(cek))
+		//logx.Info("内容密钥(cek)解密成功--", string(cek))
 
 		reqWithCek = r.WithContext(context.WithValue(r.Context(), ContentEncryptionKey, cek)) //解好存一份，用以保证三个模块叠加使用时不会重复解密
 		return
@@ -89,7 +88,7 @@ func (m *standardCryptomManager) RequestHandle(next http.HandlerFunc) http.Handl
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		logx.Info(" CryptomManager RequestHandle")
+		//logx.Info(" CryptomManager RequestHandle")
 		cek, reqWithCek, err := m.getCekFromCtxOrHeader(r)
 		if err != nil {
 			httpx.Error(w, err)
@@ -102,7 +101,7 @@ func (m *standardCryptomManager) RequestHandle(next http.HandlerFunc) http.Handl
 			httpx.Error(w, err)
 			return
 		}
-		logx.Info("原始消息体--", string(body))
+		//logx.Info("原始消息体--", string(body))
 		//解密
 		decryptBody, err := m.contentAlgo.Decrypt(string(body), cek)
 		if err != nil {
@@ -110,7 +109,7 @@ func (m *standardCryptomManager) RequestHandle(next http.HandlerFunc) http.Handl
 			httpx.Error(w, NewCryptomError(ErrTypeContentDecryptFailure, err, "正文解密出错"))
 			return
 		}
-		logx.Info("解密后的消息体--", decryptBody)
+		//logx.Info("解密后的消息体--", decryptBody)
 		closer := ioutil.NopCloser(bytes.NewBuffer(decryptBody))
 		//写回body
 		reqWithCek.Body = closer
@@ -141,16 +140,16 @@ func (m *standardCryptomManager) ResponseHandle(next http.HandlerFunc) http.Hand
 			httpx.Error(w, err)
 			return
 		}
-		logx.Info("cek--", cek)
+		//logx.Info("cek--", cek)
 
 		writerDataReciever := newResponseWriterDataReciever(w)
 		//
 		next(writerDataReciever, reqWithCek) //传newReq，令仅应用ResponseHandle时也能有CustomHandle的效果
 
-		header := writerDataReciever.Header()
-		logx.Info("header--", header)
+		//header := writerDataReciever.Header()
+		//logx.Info("header--", header)
 
-		logx.Info("加密前的响应消息--" + string(writerDataReciever.Data))
+		//logx.Info("加密前的响应消息--" + string(writerDataReciever.Data))
 
 		//⬇️ 错误（状态码不为200）时不加密，直接返回（业务逻辑错误时也是200「gozero官方示例的做法」，所以会和正常状态一样加密。如果需要改成不加密，在httpx.SetErrorHandler中国呢另行定义一个statusCode即可）
 		//statusCode！=200时直接返回
@@ -167,7 +166,7 @@ func (m *standardCryptomManager) ResponseHandle(next http.HandlerFunc) http.Hand
 			return
 		}
 
-		logx.Info("加密后的响应消息---", encryptedData)
+		//logx.Info("加密后的响应消息---", encryptedData)
 
 		w.Write([]byte(encryptedData))
 

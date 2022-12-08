@@ -2,6 +2,7 @@ package cryptom
 
 import "github.com/chenkaiwei/crypto-m/cryptom/algom"
 
+//工厂模式 别的语言爱用Create，但go爱用New，入乡随俗吧
 func NewDefaultCryptomManager(rsaPrivateKey string, ivAes []byte) CryptomManager {
 
 	//旧 写死的初始化
